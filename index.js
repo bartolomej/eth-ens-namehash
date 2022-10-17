@@ -1,5 +1,7 @@
-var sha3 = require('js-sha3').keccak_256
 require('buffer')
+var sha3 = require('js-sha3').keccak_256
+// Manually include below dependency from https://github.com/hexonet/idna-uts46
+// var uts46 = require('idna-uts46-hx')
 
 function namehash (inputName) {
   // Reject empty names:
@@ -8,9 +10,7 @@ function namehash (inputName) {
     node += '00'
   }
 
-  // assume names are already normalized
-  // var name = normalize(inputName)
-  var name = inputName
+  var name = normalize(inputName)
 
   if (name) {
     var labels = name.split('.')
@@ -22,6 +22,10 @@ function namehash (inputName) {
   }
 
   return '0x' + node
+}
+
+function normalize(name) {
+  return name ? uts46.toUnicode(name, {useStd3ASCII: true, transitional: false}) : name
 }
 
 module.exports = {
